@@ -1,73 +1,38 @@
-# React + TypeScript + Vite
+# Majd Zahreldeen — Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a Vite + React + TypeScript portfolio scaffold with Three.js animations and Tailwind CSS. Bio and projects are placeholders and will be updated.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Install deps: `npm ci`
+- Start dev server: `npm run dev`
+- Build: `npm run build`
+- Preview built site: `npm run preview`
 
-## React Compiler
+## Deployment (Vercel)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+This project is ready for Vercel and will publish the `dist` folder produced by `npm run build`.
 
-## Expanding the ESLint configuration
+To deploy:
+1. Go to https://vercel.com/new and import the repository (select `majd-zahreldeen-portfolio`).
+2. Set Build Command: `npm run build` and Output Directory: `dist`.
+3. Click Deploy — Vercel will auto-deploy from `main` on push.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+You can also use the Vercel CLI:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm i -g vercel
+vercel login
+vercel --prod
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## CI
+A GitHub Actions workflow is included at `.github/workflows/ci.yml` that runs `npm ci` and `npm run build` on push and pull requests to ensure the build succeeds before deployments.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Adding assets & content
+- Replace `src/data/projects.ts` with your real project data (images go in `public/assets/`).
+- Replace `public/logo.svg` and `public/og-image.svg` with your branding.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+If you want, I can push this repo to Vercel for you or add a `vercel.json` with custom routes — tell me if you want that.
