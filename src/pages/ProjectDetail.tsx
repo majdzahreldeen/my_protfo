@@ -1,7 +1,9 @@
 import { useParams, Link } from 'react-router-dom'
 import { projects } from '../data/projects'
 import { motion } from 'framer-motion'
-import ThreeScene from '../components/ThreeScene'
+import { Suspense, lazy } from 'react'
+
+const ThreeScene = lazy(() => import('../components/ThreeScene'))
 
 export default function ProjectDetail() {
   const { id } = useParams()
@@ -31,8 +33,14 @@ export default function ProjectDetail() {
 
       <div className="shadow-lg rounded-xl overflow-hidden mb-8">
         {/* pass the project id as sceneKey so ThreeScene can change color/animation */}
-        <ThreeScene sceneKey={project.id} />
+        <Suspense fallback={<div className="w-full h-64 flex items-center justify-center">Loading preview…</div>}>
+          <ThreeScene sceneKey={project.id} />
+        </Suspense>
       </div>
+
+      {project.image && (
+        <img src={project.image} alt={`${project.title} preview`} loading="lazy" className="w-full rounded-md mb-6" />
+      )}
 
       <Link className="underline" to="/projects">Back to projects</Link>
     </motion.div>
