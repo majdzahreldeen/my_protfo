@@ -1,34 +1,63 @@
-import { useRef } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
-import { Mesh } from 'three'
-import { OrbitControls, Preload } from '@react-three/drei'
+import { useRef, useState } from 'react'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Mesh, Vector3 } from 'three'
+import { OrbitControls, Preload, Sparkles } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 
-function AnimatedMesh() {
+function FloatingMesh() {
   const ref = useRef<Mesh>(null!)
   useFrame((_, delta) => {
     ref.current.rotation.x += delta * 0.2
     ref.current.rotation.y += delta * 0.3
+    ref.current.position.y = Math.sin(Date.now() / 600) * 0.12
   })
   return (
     <mesh ref={ref} castShadow>
-      <torusKnotGeometry args={[1, 0.35, 256, 64]} />
-      <meshStandardMaterial color="#7c3aed" roughness={0.2} metalness={0.6} />
+      <torusKnotGeometry args={[1, 0.32, 256, 64]} />
+      <meshStandardMaterial color="#7c3aed" roughness={0.15} metalness={0.8} />
     </mesh>
   )
 }
 
+function CameraParallax() {
+  const { camera, gl } = useThree()
+  const vec = new Vector3()
+  const [target] = useState({ x: 0, y: 0 })
+
+  // pointer move listener
+  gl.domElement.style.touchAction = 'none'
+  window.addEventListener('pointermove', (e) => {
+    const w = window.innerWidth
+    const h = window.innerHeight
+    target.x = (e.clientX - w / 2) / w
+    target.y = (e.clientY - h / 2) / h
+  })
+
+  useFrame(() => {
+    // smooth camera movement
+    camera.position.x += (target.x * 0.6 - camera.position.x) * 0.05
+    camera.position.y += (-target.y * 0.8 - camera.position.y) * 0.05
+    camera.lookAt(vec.set(0, 0, 0))
+  })
+  return null
+}
+
 export default function ThreeScene() {
   return (
-    <div className="w-full h-96 sm:h-[520px]">
+    <div className="w-full h-96 sm:h-[520px]" style={{ background: 'linear-gradient(180deg,#040915 0%, #001226 100%)' }}>
       <Canvas camera={{ position: [0, 0, 4], fov: 45 }} shadows>
-        <ambientLight intensity={0.3} />
-        <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
-        <pointLight position={[-5, -5, -5]} intensity={0.4} />
+        <ambientLight intensity={0.25} />
+        <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
+        <pointLight position={[-5, -5, -5]} intensity={0.35} />
 
-        <AnimatedMesh />
+        <FloatingMesh />
 
-        <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={0.6} />
+        {/* subtle sparkles / particle field */}
+        <Sparkles size={4} scale={[8, 4, 8]} position={[0, 0, -2]} speed={0.5} count={40} />
+
+        <CameraParallax />
+
+        <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={0.6} enablePan={false} />
         <Preload all />
 
         <EffectComposer>
