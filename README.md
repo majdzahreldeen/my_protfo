@@ -30,7 +30,8 @@ vercel --prod
 A GitHub Actions workflow is included at `.github/workflows/ci.yml` that runs `npm ci` and `npm run build` on push and pull requests to ensure the build succeeds before deployments.
 
 ## Adding assets & content
-- Replace `src/data/projects.ts` with your real project data (images go in `public/assets/`).
+- Replace `src/data/projects.ts` with your real project data.
+- Add high-resolution source images (PNG/JPEG) to `public/raw-images/` and run `npm run optimize:images` to generate AVIF/WebP/JPEG variants in `public/images/` (the app will automatically use those if present).
 - Replace `public/logo.svg` and `public/og-image.svg` with your branding.
 
 ---

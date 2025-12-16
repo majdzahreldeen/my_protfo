@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom'
 import { projects } from '../data/projects'
 import { motion } from 'framer-motion'
 import { Suspense, lazy } from 'react'
+import ResponsiveImage from '../components/ResponsiveImage'
 
 const ThreeScene = lazy(() => import('../components/ThreeScene'))
 
@@ -38,9 +39,13 @@ export default function ProjectDetail() {
         </Suspense>
       </div>
 
-      {project.image && (
+      {project.imageBase ? (
+        <div className="w-full rounded-md mb-6 overflow-hidden">
+          <ResponsiveImage srcBase={project.imageBase} alt={`${project.title} preview`} />
+        </div>
+      ) : project.image ? (
         <img src={project.image} alt={`${project.title} preview`} loading="lazy" className="w-full rounded-md mb-6" />
-      )}
+      ) : null}
 
       <Link className="underline" to="/projects">Back to projects</Link>
     </motion.div>

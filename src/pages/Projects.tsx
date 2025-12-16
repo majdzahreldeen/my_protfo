@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { projects } from '../data/projects'
+import ResponsiveImage from '../components/ResponsiveImage'
 
 export default function Projects() {
   return (
@@ -17,6 +18,14 @@ export default function Projects() {
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {projects.map((p) => (
           <li key={p.id} className="p-6 bg-[#071127] rounded-lg shadow-lg hover:scale-[1.01] transition-transform">
+            {p.imageBase ? (
+              <div className="mb-4 rounded-md overflow-hidden">
+                <ResponsiveImage srcBase={p.imageBase} alt={`${p.title} preview`} />
+              </div>
+            ) : (
+              p.image && <img src={p.image} alt={`${p.title} preview`} loading="lazy" className="mb-4 rounded-md" />
+            )}
+
             <h3 className="font-semibold">{p.title}</h3>
             <p className="text-gray-300">{p.description}</p>
             <div className="mt-4">
