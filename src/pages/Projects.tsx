@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { projects } from '../data/projects'
 
 export default function Projects() {
   return (
@@ -14,20 +15,15 @@ export default function Projects() {
       <h2 className="text-3xl font-semibold mb-6">Projects</h2>
       <p className="text-gray-300 mb-6">(Click a project to preview — the hero 3D scene will react to navigation.)</p>
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <li className="p-6 bg-[#071127] rounded-lg shadow-lg hover:scale-[1.01] transition-transform">
-          <h3 className="font-semibold">Project One</h3>
-          <p className="text-gray-300">A demo project showcasing 3D UI.</p>
-          <div className="mt-4">
-            <Link to="#" className="text-sm underline">View</Link>
-          </div>
-        </li>
-        <li className="p-6 bg-[#071127] rounded-lg shadow-lg hover:scale-[1.01] transition-transform">
-          <h3 className="font-semibold">Project Two</h3>
-          <p className="text-gray-300">Another demo with animations.</p>
-          <div className="mt-4">
-            <Link to="#" className="text-sm underline">View</Link>
-          </div>
-        </li>
+        {projects.map((p) => (
+          <li key={p.id} className="p-6 bg-[#071127] rounded-lg shadow-lg hover:scale-[1.01] transition-transform">
+            <h3 className="font-semibold">{p.title}</h3>
+            <p className="text-gray-300">{p.description}</p>
+            <div className="mt-4">
+              <Link to={`/projects/${p.id}`} className="text-sm underline">View</Link>
+            </div>
+          </li>
+        ))}
       </ul>
     </motion.div>
   )

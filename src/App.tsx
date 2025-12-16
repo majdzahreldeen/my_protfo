@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-do
 import { AnimatePresence } from 'framer-motion'
 import Home from './pages/Home'
 import Projects from './pages/Projects'
+import ProjectDetail from './pages/ProjectDetail'
 
 const Footer = () => (
   <footer className="max-w-6xl mx-auto text-center py-12 text-sm text-gray-400">© {new Date().getFullYear()} Majd Zahreldeen</footer>
@@ -25,6 +26,7 @@ function AnimatedRoutes() {
       <Routes key={location.pathname} location={location}>
         <Route path="/" element={<Home />} />
         <Route path="/projects" element={<Projects />} />
+        <Route path="/projects/:id" element={<ProjectDetail />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </AnimatePresence>
@@ -43,6 +45,9 @@ export default function App() {
         <Suspense>
           <AnimatedRoutes />
         </Suspense>
+
+        {/* routes for project details */}
+        
 
         <Footer />
       </main>

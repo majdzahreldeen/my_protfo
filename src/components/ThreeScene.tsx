@@ -4,7 +4,7 @@ import { Mesh, Vector3 } from 'three'
 import { OrbitControls, Preload, Sparkles } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 
-function FloatingMesh({ pulseRef }: { pulseRef?: React.MutableRefObject<number> }) {
+function FloatingMesh({ pulseRef, color }: { pulseRef?: React.MutableRefObject<number>; color?: string }) {
   const ref = useRef<Mesh>(null!)
   const baseScale = 1
   useFrame((_, delta) => {
@@ -24,7 +24,7 @@ function FloatingMesh({ pulseRef }: { pulseRef?: React.MutableRefObject<number> 
   return (
     <mesh ref={ref} castShadow>
       <torusKnotGeometry args={[1, 0.32, 256, 64]} />
-      <meshStandardMaterial color="#7c3aed" roughness={0.15} metalness={0.8} />
+      <meshStandardMaterial color={color || '#7c3aed'} roughness={0.15} metalness={0.8} />
     </mesh>
   )
 }
@@ -56,14 +56,17 @@ export default function ThreeScene({ sceneKey = 'home' }: { sceneKey?: string })
   // sceneKey prop can be used to trigger brief responses when routes change
   const pulseRef = useRef(0)
 
+  // derive color from sceneKey for a simple visual mapping
+  const color = sceneKey === 'project-one' ? '#7c3aed' : sceneKey === 'project-two' ? '#06b6d4' : '#7c3aed'
+
   // increment pulseRef when sceneKey changes
   const lastKey = useRef(sceneKey)
   if (lastKey.current !== sceneKey) {
     lastKey.current = sceneKey
-    pulseRef.current = 1.0 // start a pulse
+    pulseRef.current = 1.2 // start a stronger pulse on route/selection change
   }
 
-  // FloatingMesh reads pulseRef.current to do a quick scale/rotation effect
+  // FloatingMesh reads pulseRef.current to do a quick scale/rotation effect and color
   return (
     <div className="w-full h-96 sm:h-[520px]" style={{ background: 'linear-gradient(180deg,#040915 0%, #001226 100%)' }}>
       <Canvas camera={{ position: [0, 0, 4], fov: 45 }} shadows>
@@ -71,10 +74,10 @@ export default function ThreeScene({ sceneKey = 'home' }: { sceneKey?: string })
         <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
         <pointLight position={[-5, -5, -5]} intensity={0.35} />
 
-        <FloatingMesh pulseRef={pulseRef} />
+        <FloatingMesh pulseRef={pulseRef} color={color} />
 
         {/* subtle sparkles / particle field */}
-        <Sparkles size={4} scale={[8, 4, 8]} position={[0, 0, -2]} speed={0.5} count={40} />
+        <Sparkles size={4} color={color} scale={[8, 4, 8]} position={[0, 0, -2]} speed={0.5} count={40} />
 
         <CameraParallax />
 
