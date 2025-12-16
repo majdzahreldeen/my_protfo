@@ -27,7 +27,7 @@ vercel --prod
 ```
 
 ## CI
-A GitHub Actions workflow is included at `.github/workflows/ci.yml` that runs `npm ci` and `npm run build` on push and pull requests to ensure the build succeeds before deployments.
+A GitHub Actions workflow is included at `.github/workflows/ci.yml` that runs `npm ci` and `npm run build` on push and pull requests to ensure the build succeeds before deployments. The workflow now also runs `npm run optimize:images` in a separate `images` job and makes the optimized images available to the `build` job as an artifact, so the site build includes optimized AVIF/WebP/JPEG assets automatically.
 
 ## Adding assets & content
 - Replace `src/data/projects.ts` with your real project data.
