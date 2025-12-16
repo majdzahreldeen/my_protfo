@@ -4,9 +4,19 @@ import { Mesh, Vector3 } from 'three'
 import { OrbitControls, Preload, Sparkles } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 
-function FloatingMesh() {
+function FloatingMesh({ pulseRef }: { pulseRef?: React.MutableRefObject<number> }) {
   const ref = useRef<Mesh>(null!)
+  const baseScale = 1
   useFrame((_, delta) => {
+    // pulseRef can be set to a value > 0 to trigger a short pulse that decays
+    if (pulseRef && pulseRef.current > 0) {
+      const amount = pulseRef.current
+      ref.current.scale.setScalar(baseScale + amount * 0.24)
+      pulseRef.current = Math.max(0, pulseRef.current - delta * 2.2)
+    } else {
+      ref.current.scale.setScalar(baseScale)
+    }
+
     ref.current.rotation.x += delta * 0.2
     ref.current.rotation.y += delta * 0.3
     ref.current.position.y = Math.sin(Date.now() / 600) * 0.12
@@ -42,7 +52,18 @@ function CameraParallax() {
   return null
 }
 
-export default function ThreeScene() {
+export default function ThreeScene({ sceneKey = 'home' }: { sceneKey?: string }) {
+  // sceneKey prop can be used to trigger brief responses when routes change
+  const pulseRef = useRef(0)
+
+  // increment pulseRef when sceneKey changes
+  const lastKey = useRef(sceneKey)
+  if (lastKey.current !== sceneKey) {
+    lastKey.current = sceneKey
+    pulseRef.current = 1.0 // start a pulse
+  }
+
+  // FloatingMesh reads pulseRef.current to do a quick scale/rotation effect
   return (
     <div className="w-full h-96 sm:h-[520px]" style={{ background: 'linear-gradient(180deg,#040915 0%, #001226 100%)' }}>
       <Canvas camera={{ position: [0, 0, 4], fov: 45 }} shadows>
@@ -50,7 +71,7 @@ export default function ThreeScene() {
         <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
         <pointLight position={[-5, -5, -5]} intensity={0.35} />
 
-        <FloatingMesh />
+        <FloatingMesh pulseRef={pulseRef} />
 
         {/* subtle sparkles / particle field */}
         <Sparkles size={4} scale={[8, 4, 8]} position={[0, 0, -2]} speed={0.5} count={40} />
