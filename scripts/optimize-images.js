@@ -5,7 +5,7 @@
 
 import fs from 'fs'
 import path from 'path'
-import glob from 'glob'
+import { sync } from 'glob'
 import sharp from 'sharp'
 
 const RAW_DIR = path.join(process.cwd(), 'public', 'raw-images')
@@ -45,9 +45,9 @@ async function main() {
     process.exit(1)
   }
 
-  const files = glob.sync('*.{jpg,jpeg,png}', { cwd: RAW_DIR })
+  const files = sync('*.{jpg,jpeg,png,svg}', { cwd: RAW_DIR })
   if (!files.length) {
-    console.error('No jpg/png files found in public/raw-images')
+    console.error('No jpg/png/svg files found in public/raw-images')
     process.exit(1)
   }
 
